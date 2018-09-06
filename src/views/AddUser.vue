@@ -59,7 +59,10 @@
     
     methods: {
       addUser() {
-        this.users = JSON.parse(localStorage.getItem("usersStorage"))
+        if (localStorage.getItem("usersStorage") !== null) {
+          this.users = JSON.parse(localStorage.getItem("usersStorage"))
+        }
+        
         this.users.push(
           {
             name: this.name,

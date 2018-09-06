@@ -7,28 +7,28 @@
           label="Name"
           label-for="name"
         >
-          <b-form-input id="name"></b-form-input>
+          <b-form-input id="name" v-model="userEdit.name"></b-form-input>
         </b-form-group>
         
         <b-form-group
           label="Surname"
           label-for="surname"
         >
-          <b-form-input id="surname"></b-form-input>
+          <b-form-input id="surname" v-model="userEdit.surname"></b-form-input>
         </b-form-group>
         
         <b-form-group
           label="Phone"
           label-for="phone"
         >
-          <b-form-input id="phone"></b-form-input>
+          <b-form-input id="phone" v-model="userEdit.phone"></b-form-input>
         </b-form-group>
         
         <b-form-group
           label="Email"
           label-for="email"
         >
-          <b-form-input id="email"></b-form-input>
+          <b-form-input id="email" v-model="userEdit.email"></b-form-input>
         </b-form-group>
   
         <b-button type="submit" variant="success" class="mr-2">Save</b-button>
@@ -48,18 +48,23 @@
     
     data () {
       return {
-        users: []
+        users: [],
+        userEdit: [],
+        index: null
       }
     },
     
     mounted() {
       this.users = JSON.parse(localStorage.getItem("usersStorage"))
-      console.log(this.$route.params.userId)
-      console.log(this.users[this.$route.params.userId].name)
+      this.index = this.$route.params.userId
+      this.userEdit = JSON.parse(localStorage.getItem("usersStorage"))[this.index]
     },
     
     methods: {
       editUser() {
+        this.users[this.index] = this.userEdit
+        localStorage.setItem("usersStorage", JSON.stringify(this.users))
+        this.$router.push('/')
       }
     },
     
