@@ -49,7 +49,7 @@
             accept=".json"
             :state="Boolean(file)"
             placeholder="Choose a file..."
-            @change="handleFiles"
+            @change="handleFiles($event)"
           ></b-form-file>
         </b-form-group>
   
@@ -77,7 +77,8 @@
         email: '',
         file: null,
         selectedFile: null,
-        reader: null
+        reader: null,
+        onchangeResult: {}
       }
     },
     mounted() {
@@ -101,17 +102,33 @@
         this.$router.push('/')
       },
 
-      handleFiles() {
+      // eslint-disable-next-line
+      handleFiles(event) {
+        let  _this = this
         this.selectedFile = document.getElementById('json').files[0]
         this.reader = new FileReader()
-        this.reader.onload = function () {
-          console.log(document.getElementById('json').result)
+        this.reader.onload = function (event) {
+          _this.onchangeResult = JSON.parse(event.target.result)
         }
-        reader.readAsText(this.selectedFile)
+        this.reader.readAsText(this.selectedFile)
       },
 
       addUserFromJson() {
-        // console.log(this.selectedFile)
+        if (localStorage.getItem("usersStorage") !== null) {
+          this.users = JSON.parse(localStorage.getItem("usersStorage"))
+        }
+        
+        this.users.push(
+          {
+            name: this.onchangeResult.name,
+            surname: this.onchangeResult.surname,
+            phone: this.onchangeResult.phone,
+            email: this.onchangeResult.email
+          }
+        )
+        
+        localStorage.setItem("usersStorage", JSON.stringify(this.users))
+        this.$router.push('/')
       }
     },
     
