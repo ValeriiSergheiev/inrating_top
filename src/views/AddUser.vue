@@ -77,6 +77,7 @@
         email: '',
         file: null,
         selectedFile: null,
+        selectedFiles: {},
         reader: null,
         onchangeResult: {}
       }
@@ -105,15 +106,24 @@
       // eslint-disable-next-line
       handleFiles(event) {
         let  _this = this
-        this.selectedFile = document.getElementById('json').files[0]
+        this.selectedFiles = document.getElementById('json').files
+        this.selectedFile = this.selectedFiles[0]
         this.reader = new FileReader()
+        
         this.reader.onload = function (event) {
-          _this.onchangeResult = JSON.parse(event.target.result)
+          if (_this.reader.readyState == 2) {
+            _this.onchangeResult = JSON.parse(event.target.result)
+          }
         }
         this.reader.readAsText(this.selectedFile)
       },
 
       addUserFromJson() {
+        if (!this.selectedFiles.length) {
+          alert('Select a file!')
+          return
+        }
+        
         if (localStorage.getItem("usersStorage") !== null) {
           this.users = JSON.parse(localStorage.getItem("usersStorage"))
         }
